@@ -37,14 +37,14 @@ function App() {
     <Router>
      <Header/>
       <Switch>
-          <Route exact path="/">
-             <ContactList contacts={contacts} getContactId={removeContactHandler}/>
-          </Route>
-          <Route path="/add">
-             <AddContact addContactHandler={addContactHandler}/>
-          </Route>
-       
-       
+          <Route path="/" exact render={(props) => (
+            <ContactList {...props} contacts={contacts} getContactId={removeContactHandler} />
+          )}
+          />
+          <Route path="/add"  render={(props) => (
+            <AddContact {...props} addContactHandler={addContactHandler} />
+          )}
+          />   
       </Switch>
      </Router>
      
