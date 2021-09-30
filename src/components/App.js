@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AddContact from './AddContact';
+import EditContact from './EditContact';
 import './App.css';
 import ContactList from './ContactList';
 import Header from "./Header";
@@ -28,8 +29,18 @@ function App() {
     setContacts([...contacts, response.data ]);
   };
 
-  const removeContactHandler = async (id) => {
-    await api.delete('/contacts/${id}');
+  const updateContactHandler = async (contact) => {
+    const response = await api.put("/contacts/${contact.id}",contact);
+    const {id, name, email}= response.data;
+    setContacts(
+      contacts.map((contact) => {
+        return contact.id === id ? { ...response.data } : contact;
+      })
+    );
+  };
+
+  const removeContactHandler = async (contact,id) => {
+    await api.delete('/contacts/${contact.id}');
     const newContactList = contacts.filter((contact) => {
       return contact.id !== id;
     });
@@ -62,6 +73,10 @@ function App() {
           />
           <Route path="/add"  render={(props) => (
             <AddContact {...props} addContactHandler={addContactHandler} />
+          )}
+          />
+           <Route path="/edit"  render={(props) => (
+            <EditContact {...props} updateContactHandler={updateContactHandler} />
           )}
           />
           <Route path="/contact/:id" component={ContactDetail} />   
